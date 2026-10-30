@@ -1,0 +1,28 @@
+/* Ejercicio 6 · Práctica posicionamiento
+
+Duración: 20 minutos. Formato: individual.
+
+1. Crea un header con position: fixed en la parte superior, visible siempre al hacer scroll (recuerda compensar con padding-top en el body).
+
+2. Dentro de una tarjeta de producto (position: relative), añade una etiqueta «Nuevo» en position: absolute, arriba a la derecha.
+
+3. Crea un menú lateral con position: sticky que se quede fijo al llegar arriba del todo tras el scroll.
+
+4. Superpón dos cajas de color y usa z-index para decidir cuál queda por encima. */
+
+body {
+    margin: 0;
+    padding-top: 80px;
+}
+
+header {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 80px;
+    background-color: blue;
+    color: white;
+    text-align: center;
+    z-index: 100;
+}
