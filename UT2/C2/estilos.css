@@ -16,3 +16,59 @@ a[href]:hover {
 img[alt=""] {
     border: 2px solid black;
 }
+
+
+*,
+*::before,
+*::after {
+    box-sizing: border-box;
+}
+
+body {
+    padding-top: 150px;
+}
+
+header {
+    position: fixed;
+    top: 0;
+    width: 100%;
+    z-index: 10;
+}
+
+#oferta-destacada {
+    position: relative;
+}
+
+.etiqueta-nuevo {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+}
+
+.menu-lateral {
+    position: sticky;
+    top: 10px;
+}
+
+.cajas-superpuestas {
+    position: relative;
+    height: 120px;
+}
+
+.caja1, .caja2 {
+    position: absolute;
+    width: 120px;
+    height: 80px;
+}
+
+.caja1 {
+    background-color: red;
+    z-index: 1;
+}
+
+.caja2 {
+    left: 50px;
+    top: 25px;
+    background-color: blue;
+    z-index: 2;
+}
