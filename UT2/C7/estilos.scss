@@ -1,0 +1,25 @@
+$primario: #283044;
+$acento: #59D2FE;
+
+nav {
+    background-color: $primario;
+
+    a {
+        color: white;
+    }
+}
+
+@mixin boton {
+    padding: 10px;
+    border-radius: 5px;
+}
+
+.btn-primario {
+    @include boton;
+    background-color: $primario;
+}
+
+.btn-acento {
+    @include boton;
+    background-color: $acento;
+}
