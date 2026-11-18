@@ -1,0 +1,137 @@
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  font-family: "IBM Plex Sans", sans-serif;
+}
+body {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  padding-top: 64px;
+  background-color: #F7F7F2;
+}
+h1, h2 {
+  font-weight: normal;
+}
+a {
+  text-decoration: none;
+}
+.cabecera {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 64px;
+  display: flex;
+  align-items: center;
+  padding: 32px;
+  background-color: #283044;
+}
+.cabecera a, footer a {
+  color: white;
+}
+.logo {
+  margin-right: 48px;
+  font-size: 20px;
+  display: flex;
+  align-items: center;
+}
+.logo img {
+  height: 44px;
+  width: auto;
+  display: block;
+}
+nav a {
+  margin-right: 32px;
+}
+main {
+  flex: 1;
+  padding: 48px 32px;
+}
+h1 {
+  font-size: 32px;
+}
+.buscador {
+  width: 480px;
+  max-width: 100%;
+  height: 44px;
+  margin: 32px 0;
+  padding: 0 16px;
+  border: none;
+  background-color: #D9D9D6;
+}
+.recomendadas {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 32px;
+}
+.recomendadas h2 {
+  width: 100%;
+  font-size: 16px;
+}
+.tarjeta {
+  width: 200px;
+  text-align: center;
+}
+.icono {
+  display: block;
+  padding: 50px 0;
+  background-color: #D9D9D6;
+  font-size: 64px;
+}
+.tarjeta h3 {
+  margin: 16px 0 8px;
+}
+.escuchar {
+  color: black;
+}
+
+.cargando {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  width: 32px;
+  height: 32px;
+  margin-top: -16px;
+  margin-left: -16px;
+  border: 3px solid rgba(40, 48, 68, 0.2);
+  border-top-color: #283044;
+  border-radius: 50%;
+  animation: girar 0.8s linear infinite;
+  pointer-events: none;
+  z-index: 1000;
+}
+
+@keyframes girar {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+footer {
+  padding: 24px 32px;
+  background-color: #283044;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 24px;
+}
+footer a {
+  margin-right: 48px;
+}
+.footer-legal {
+  color: rgba(255, 255, 255, 0.75);
+  font-size: 12px;
+  text-align: center;
+}
+.footer-redes {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+.footer-redes a {
+  margin-right: 0;
+  display: flex;
+  align-items: center;
+}
