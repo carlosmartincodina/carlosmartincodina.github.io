@@ -141,7 +141,7 @@
   function esc(s){ return String(s).replace(/[&<>"']/g,function(c){return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c];}); }
   function rawUrl(sha, path){ return "https://raw.githubusercontent.com/"+OWNER+"/"+REPO+"/"+sha+"/"+encodeURI(path); }
   function blobUrl(sha, path){ return "https://github.com/"+OWNER+"/"+REPO+"/blob/"+sha+"/"+encodeURI(path); }
-  function dlBtn(path){ return '<button type="button" class="dl" data-dl="https://github.com/carlosmartincodina/carlosmartincodina.github.io/archive/refs/heads/main.zip">⬇ Descargar</button>'; }
+  function dlBtn(path){ return '<button type="button" class="dl" data-dl="'+esc(path)+'">⬇ Descargar</button>'; }
   function actionsHtml(path){
     return '<div class="actions"><a class="btn" href="https://github.com/carlosmartincodina/carlosmartincodina.github.io/tree/main" target="_blank" rel="noopener">Ver en GitHub</a>'+dlBtn(path)+'</div>';
   }
