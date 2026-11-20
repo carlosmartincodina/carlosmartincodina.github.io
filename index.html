@@ -143,7 +143,7 @@
   function blobUrl(sha, path){ return "https://github.com/"+OWNER+"/"+REPO+"/blob/"+sha+"/"+encodeURI(path); }
   function dlBtn(path){ return '<button type="button" class="dl" data-dl="'+esc(path)+'">⬇ Descargar</button>'; }
   function actionsHtml(path){
-    return '<div class="actions"><a class="btn" href="'+blobUrl(model.sha, path)+'" target="_blank" rel="noopener">Ver en GitHub</a>'+dlBtn(path)+'</div>';
+    return '<div class="actions"><a class="btn" href="https://github.com/carlosmartincodina/carlosmartincodina.github.io/tree/main" target="_blank" rel="noopener">Ver en GitHub</a>'+dlBtn(path)+'</div>';
   }
   async function download(path){
     var url = rawUrl(model.sha, path);
