@@ -50,6 +50,14 @@
   .body table{border-collapse:collapse}
   .body td,.body th{border:1px solid var(--line);padding:6px 10px}
   .body.center{text-align:center;padding-top:18px}
+  .actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:16px}
+  .grid .actions{margin:0;padding:0 12px 12px}
+  .row{display:flex;gap:8px;align-items:center}
+  .btn,.dl{font:600 .8rem system-ui,sans-serif;padding:6px 12px;border-radius:8px;cursor:pointer;
+    border:1px solid var(--accent);text-decoration:none;white-space:nowrap}
+  .dl{background:var(--accent);color:#fff}
+  .btn{background:transparent;color:var(--accent)}
+  .dl:hover{opacity:.85}
   .crumbs{font-family:system-ui,sans-serif;font-size:.9rem;color:var(--muted);margin-bottom:6px}
   .crumbs a{color:var(--accent);text-decoration:none}
   .crumbs a:hover{text-decoration:underline}
@@ -132,6 +140,21 @@
   }
   function esc(s){ return String(s).replace(/[&<>"']/g,function(c){return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c];}); }
   function rawUrl(sha, path){ return "https://raw.githubusercontent.com/"+OWNER+"/"+REPO+"/"+sha+"/"+encodeURI(path); }
+  function blobUrl(sha, path){ return "https://github.com/"+OWNER+"/"+REPO+"/blob/"+sha+"/"+encodeURI(path); }
+  function dlBtn(path){ return '<button type="button" class="dl" data-dl="'+esc(path)+'">⬇ Descargar</button>'; }
+  function actionsHtml(path){
+    return '<div class="actions"><a class="btn" href="'+blobUrl(model.sha, path)+'" target="_blank" rel="noopener">Ver en GitHub</a>'+dlBtn(path)+'</div>';
+  }
+  async function download(path){
+    var url = rawUrl(model.sha, path);
+    try{
+      var r = await fetch(url); if(!r.ok) throw 0;
+      var b = await r.blob(), a = document.createElement("a");
+      a.href = URL.createObjectURL(b); a.download = path.split("/").pop();
+      document.body.appendChild(a); a.click(); a.remove();
+      setTimeout(function(){ URL.revokeObjectURL(a.href); }, 5000);
+    }catch(e){ window.open(url, "_blank", "noopener"); }
+  }
   function kind(p){ return TEXT.test(p) ? "text" : IMG.test(p) ? "img" : "other"; }
   function setStatus(txt, busy){ $("status").textContent = txt; $("dot").className = "dot" + (busy ? " busy" : ""); }
   function ago(iso){
@@ -235,14 +258,15 @@
     if(imgs.length){
       html += '<h2 class="section">Imágenes</h2><div class="grid">' + imgs.map(function(f){
         var u = rawUrl(m.sha, f.path);
-        return '<figure><a href="'+u+'" target="_blank" rel="noopener"><img loading="lazy" src="'+u+'" alt="'+esc(f.path)+'"></a>'+
-               '<figcaption><span>'+esc(f.path.split("/").pop())+'</span>'+(f.isNew?'<span class="badge">Nuevo</span>':'')+'</figcaption></figure>';
+        return '<figure><a href="'+blobUrl(m.sha, f.path)+'" target="_blank" rel="noopener"><img loading="lazy" src="'+u+'" alt="'+esc(f.path)+'"></a>'+
+               '<figcaption><span>'+esc(f.path.split("/").pop())+'</span>'+(f.isNew?'<span class="badge">Nuevo</span>':'')+'</figcaption>'+
+               '<div class="actions">'+dlBtn(f.path)+'</div></figure>';
       }).join("") + '</div>';
     }
     if(other.length){
       html += '<h2 class="section">Otros archivos</h2><ul class="files">' + other.map(function(f){
-        var href = /\.html?$/i.test(f.path) ? encodeURI(f.path) : rawUrl(m.sha, f.path);
-        return '<li><a class="link" href="'+href+'" target="_blank" rel="noopener">'+esc(f.path.split("/").pop())+'</a>'+(f.isNew?'<span class="badge">Nuevo</span>':'')+'</li>';
+        return '<li><a class="link" href="'+blobUrl(m.sha, f.path)+'" target="_blank" rel="noopener">'+esc(f.path.split("/").pop())+'</a>'+
+               '<span class="row">'+(f.isNew?'<span class="badge">Nuevo</span>':'')+dlBtn(f.path)+'</span></li>';
       }).join("") + '</ul>';
     }
     if(!subList.length && !texts.length && !imgs.length && !other.length)
@@ -280,7 +304,8 @@
             });
             b.querySelectorAll("a").forEach(function(a){ a.target="_blank"; a.rel="noopener"; });
           }
-        }catch(e){ d.querySelector(".body").textContent = "No se pudo cargar este archivo."; }
+          b.insertAdjacentHTML("beforeend", actionsHtml(f.path));
+        }catch(e){ d.querySelector(".body").innerHTML = "No se pudo cargar este archivo." + actionsHtml(f.path); }
         return d;
       }));
       cards.forEach(function(c){ holder.appendChild(c); });
@@ -292,6 +317,11 @@
     filter = b.dataset.f;
     document.querySelectorAll("#filters button").forEach(function(x){ x.setAttribute("aria-pressed", String(x===b)); });
     if(model) render();
+  });
+
+  document.addEventListener("click", function(e){
+    var b = e.target.closest("[data-dl]");
+    if(b && model){ e.preventDefault(); download(b.getAttribute("data-dl")); }
   });
 
   window.addEventListener("hashchange", function(){ if(model){ render(); window.scrollTo(0,0); } });
