@@ -1,0 +1,305 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Carlos Martín Codina</title>
+<meta name="description" content="Contenidos que se actualizan solos a partir del repositorio de GitHub.">
+<style>
+  :root{
+    --bg:#f6f5f1; --card:#ffffff; --ink:#1d1d1b; --muted:#6b6a64; --line:#e4e2da;
+    --accent:#c2410c; --accent-soft:#fdebdd; --new:#15803d; --new-soft:#dcfce7;
+  }
+  @media (prefers-color-scheme: dark){
+    :root{--bg:#161614; --card:#201f1d; --ink:#efede6; --muted:#9b998f; --line:#33322e;
+      --accent:#fb923c; --accent-soft:#3a2417; --new:#4ade80; --new-soft:#12301d;}
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--ink);
+    font:16px/1.65 Georgia,"Iowan Old Style","Times New Roman",serif}
+  .wrap{max-width:860px;margin:0 auto;padding:0 20px 80px}
+  header{padding:56px 0 28px;border-bottom:1px solid var(--line);margin-bottom:24px}
+  header h1{margin:0;font-size:clamp(2rem,6vw,3rem);letter-spacing:-.02em;line-height:1.1}
+  header p{margin:10px 0 0;color:var(--muted);font-family:system-ui,sans-serif;font-size:.95rem}
+  .bar{display:flex;flex-wrap:wrap;gap:10px;align-items:center;justify-content:space-between;
+    font-family:system-ui,sans-serif;font-size:.85rem;color:var(--muted);margin-bottom:20px}
+  .filters{display:flex;gap:6px;flex-wrap:wrap}
+  .filters button{font:inherit;border:1px solid var(--line);background:var(--card);color:var(--ink);
+    padding:6px 12px;border-radius:999px;cursor:pointer}
+  .filters button[aria-pressed="true"]{background:var(--accent);border-color:var(--accent);color:#fff}
+  .status{display:flex;align-items:center;gap:8px}
+  .dot{width:8px;height:8px;border-radius:50%;background:var(--new)}
+  .dot.busy{background:var(--accent);animation:p 1s infinite}
+  @keyframes p{50%{opacity:.25}}
+  h2.section{font-family:system-ui,sans-serif;font-size:.8rem;text-transform:uppercase;
+    letter-spacing:.12em;color:var(--muted);margin:36px 0 14px}
+  .card{background:var(--card);border:1px solid var(--line);border-radius:14px;margin:0 0 16px;overflow:hidden}
+  .card>summary{list-style:none;cursor:pointer;display:flex;gap:10px;align-items:center;
+    justify-content:space-between;padding:14px 18px;font-family:system-ui,sans-serif;font-size:.9rem}
+  .card>summary::-webkit-details-marker{display:none}
+  .card>summary .name{font-weight:600;word-break:break-all}
+  .card>summary .path{color:var(--muted);font-weight:400}
+  .badge{background:var(--new-soft);color:var(--new);font-size:.7rem;font-weight:700;
+    padding:2px 8px;border-radius:999px;text-transform:uppercase;letter-spacing:.06em;white-space:nowrap}
+  .body{padding:4px 22px 22px;border-top:1px solid var(--line)}
+  .body img{max-width:100%;height:auto;border-radius:8px}
+  .body pre{overflow:auto;background:var(--bg);padding:12px;border-radius:8px;font-size:.85rem}
+  .body code{font-family:ui-monospace,Menlo,monospace}
+  .body a,.link{color:var(--accent)}
+  .body blockquote{margin:1em 0;padding-left:14px;border-left:3px solid var(--accent-soft);color:var(--muted)}
+  .body table{border-collapse:collapse}
+  .body td,.body th{border:1px solid var(--line);padding:6px 10px}
+  .body.center{text-align:center;padding-top:18px}
+  .crumbs{font-family:system-ui,sans-serif;font-size:.9rem;color:var(--muted);margin-bottom:6px}
+  .crumbs a{color:var(--accent);text-decoration:none}
+  .crumbs a:hover{text-decoration:underline}
+  .folders{display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:12px}
+  .folder{display:grid;grid-template-columns:auto 1fr auto;align-items:center;gap:2px 10px;
+    background:var(--card);border:1px solid var(--line);border-radius:12px;padding:12px 14px;
+    text-decoration:none;color:var(--ink);font-family:system-ui,sans-serif}
+  .folder:hover{border-color:var(--accent)}
+  .folder .ico{grid-row:1/3;font-size:1.6rem}
+  .folder .fname{font-weight:600;word-break:break-word}
+  .folder .fcount{grid-column:2;color:var(--muted);font-size:.8rem}
+  .folder .badge{grid-row:1/3;grid-column:3}
+  .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:14px}
+  .grid figure{margin:0;background:var(--card);border:1px solid var(--line);border-radius:12px;overflow:hidden}
+  .grid img{display:block;width:100%;height:160px;object-fit:cover}
+  .grid figcaption{padding:8px 12px;font:.8rem/1.3 system-ui,sans-serif;color:var(--muted);
+    display:flex;justify-content:space-between;gap:6px;word-break:break-all}
+  .files{list-style:none;margin:0;padding:0;font-family:system-ui,sans-serif;font-size:.92rem}
+  .files li{background:var(--card);border:1px solid var(--line);border-radius:10px;
+    padding:10px 14px;margin-bottom:8px;display:flex;justify-content:space-between;gap:8px}
+  .commits{list-style:none;margin:0;padding:0;font-family:system-ui,sans-serif;font-size:.9rem}
+  .commits li{padding:10px 0;border-bottom:1px solid var(--line);display:flex;justify-content:space-between;gap:12px}
+  .commits time{color:var(--muted);white-space:nowrap;font-size:.8rem}
+  .msg{padding:22px;border:1px dashed var(--line);border-radius:14px;color:var(--muted);
+    font-family:system-ui,sans-serif;text-align:center}
+  .msg.err{color:#b91c1c;border-color:#b91c1c}
+  footer{margin-top:50px;color:var(--muted);font:.8rem system-ui,sans-serif;text-align:center}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <h1>Carlos Martín Codina</h1>
+    <p>Esta página se actualiza sola: todo lo que se sube al repositorio aparece aquí.</p>
+  </header>
+
+  <div class="bar">
+    <div class="filters" id="filters" role="group" aria-label="Filtrar contenidos">
+      <button data-f="all" aria-pressed="true">Todo</button>
+      <button data-f="text" aria-pressed="false">Textos</button>
+      <button data-f="img" aria-pressed="false">Imágenes</button>
+      <button data-f="other" aria-pressed="false">Otros archivos</button>
+    </div>
+    <div class="status"><span class="dot" id="dot"></span><span id="status">Cargando…</span></div>
+  </div>
+
+  <main id="content"><div class="msg">Cargando contenidos del repositorio…</div></main>
+
+  <h2 class="section" id="activityTitle" hidden>Últimos cambios</h2>
+  <ul class="commits" id="commits"></ul>
+
+  <footer>
+    Contenido leído en directo desde
+    <a class="link" id="repoLink" target="_blank" rel="noopener">GitHub</a>
+    · se comprueba cada minuto
+  </footer>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/marked@12/marked.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/dompurify@3/dist/purify.min.js"></script>
+<script>
+(function(){
+  // ====== Configuración ======
+  var OWNER = "carlosmartincodina";
+  var REPO  = "carlosmartincodina.github.io";
+  var POLL_MS = 60000;                       // cada cuánto se comprueba si hay cambios
+  var IGNORE = /^(\.|index\.html$|LICENSE|CNAME|node_modules\/|\.github\/)/i;
+  // ===========================
+
+  var API = "https://api.github.com/repos/" + OWNER + "/" + REPO;
+  var TEXT = /\.(md|markdown|txt)$/i, IMG = /\.(png|jpe?g|gif|webp|svg|avif)$/i;
+  var etag = null, currentSha = null, filter = "all", model = null;
+  var $ = function(id){ return document.getElementById(id); };
+
+  $("repoLink").href = "https://github.com/" + OWNER + "/" + REPO;
+
+  function store(get, val){
+    try{ if(val===undefined) return JSON.parse(localStorage.getItem(get)); localStorage.setItem(get, JSON.stringify(val)); }
+    catch(e){ return null; }
+  }
+  function esc(s){ return String(s).replace(/[&<>"']/g,function(c){return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c];}); }
+  function rawUrl(sha, path){ return "https://raw.githubusercontent.com/"+OWNER+"/"+REPO+"/"+sha+"/"+encodeURI(path); }
+  function kind(p){ return TEXT.test(p) ? "text" : IMG.test(p) ? "img" : "other"; }
+  function setStatus(txt, busy){ $("status").textContent = txt; $("dot").className = "dot" + (busy ? " busy" : ""); }
+  function ago(iso){
+    var s = Math.max(1, (Date.now() - new Date(iso)) / 1000);
+    var u = [[31536000,"año"],[2592000,"mes"],[86400,"día"],[3600,"hora"],[60,"minuto"]];
+    for(var i=0;i<u.length;i++){ if(s>=u[i][0]){ var n=Math.floor(s/u[i][0]); var w=u[i][1];
+      if(w==="mes") return "hace "+n+(n>1?" meses":" mes"); return "hace "+n+" "+w+(n>1?"s":""); } }
+    return "hace unos segundos";
+  }
+
+  async function gh(url, useEtag){
+    var h = {Accept:"application/vnd.github+json"};
+    if(useEtag && etag) h["If-None-Match"] = etag;
+    var r = await fetch(url, {headers:h});
+    if(r.status === 304) return null;
+    if(r.status === 403 || r.status === 429) throw new Error("Límite de peticiones de GitHub alcanzado. Se reintentará en un rato.");
+    if(!r.ok) throw new Error("GitHub respondió " + r.status);
+    if(useEtag) etag = r.headers.get("ETag");
+    return r.json();
+  }
+
+  async function load(){
+    setStatus("Comprobando…", true);
+    try{
+      var commits = await gh(API + "/commits?per_page=10", true);
+      if(commits === null){ setStatus("Actualizado · sin cambios", false); return; }
+      if(!commits.length) throw new Error("El repositorio todavía no tiene commits.");
+      var sha = commits[0].sha;
+      if(sha === currentSha){ setStatus("Actualizado", false); return; }
+
+      var tree = await gh(API + "/git/trees/" + sha + "?recursive=1", false);
+      var files = tree.tree.filter(function(n){ return n.type==="blob" && !IGNORE.test(n.path); });
+
+      // Detectar novedades respecto a la última visita (por hash del archivo)
+      var seen = store("seen:"+REPO) || {};
+      var first = !Object.keys(seen).length;
+      files.forEach(function(f){ f.isNew = !first && seen[f.path] !== f.sha; });
+      var next = {}; files.forEach(function(f){ next[f.path] = f.sha; });
+      // Se guarda al terminar de pintar para que "Nuevo" se vea en esta visita
+      setTimeout(function(){ store("seen:"+REPO, next); }, 1500);
+
+      currentSha = sha;
+      model = {sha: sha, files: files, commits: commits};
+      await render();
+      setStatus("Actualizado " + new Date().toLocaleTimeString("es-ES",{hour:"2-digit",minute:"2-digit"}), false);
+    }catch(e){
+      setStatus("Error", false);
+      if(!model) $("content").innerHTML = '<div class="msg err">'+esc(e.message)+'</div>';
+    }
+  }
+
+  async function render(){
+    var m = model, box = $("content");
+    var show = function(f){ return filter==="all" || kind(f.path)===filter; };
+
+    // Carpeta actual (se guarda en la URL: #/carpeta/subcarpeta)
+    var cur = decodeURIComponent(location.hash.replace(/^#\/?/, "")).replace(/\/+$/, "");
+    var prefix = cur ? cur + "/" : "";
+    var inCur = m.files.filter(function(f){ return f.path.indexOf(prefix) === 0; });
+    var dirOf = function(p){ return p.indexOf("/")>-1 ? p.slice(0, p.lastIndexOf("/")) : ""; };
+
+    // Subcarpetas inmediatas con su número de archivos
+    var subs = {};
+    inCur.forEach(function(f){
+      var rest = f.path.slice(prefix.length), i = rest.indexOf("/");
+      if(i > -1){
+        var n = rest.slice(0, i), s = subs[n] || (subs[n] = {name:n, count:0, isNew:false});
+        s.count++; if(f.isNew) s.isNew = true;
+      }
+    });
+    var subList = Object.keys(subs).sort(function(a,b){ return a.localeCompare(b); }).map(function(k){ return subs[k]; });
+
+    var here = inCur.filter(function(f){ return dirOf(f.path) === cur; });
+    var texts = here.filter(function(f){return kind(f.path)==="text" && show(f);})
+                    .sort(function(a,b){ return (b.isNew-a.isNew) || a.path.localeCompare(b.path); });
+    var imgs  = here.filter(function(f){return kind(f.path)==="img" && show(f);});
+    var other = here.filter(function(f){return kind(f.path)==="other" && show(f);});
+
+    var html = "";
+
+    // Migas de pan
+    var parts = cur ? cur.split("/") : [], acc = "";
+    html += '<nav class="crumbs" aria-label="Ruta"><a href="#/">Inicio</a>' + parts.map(function(p){
+      acc += (acc ? "/" : "") + p;
+      return ' <span>/</span> <a href="#/'+encodeURI(acc)+'">'+esc(p)+'</a>';
+    }).join("") + '</nav>';
+
+    // Carpetas
+    if(subList.length){
+      html += '<h2 class="section">Carpetas</h2><div class="folders">' + subList.map(function(s){
+        var target = "#/" + encodeURI(prefix + s.name);
+        return '<a class="folder" href="'+target+'"><span class="ico">📁</span><span class="fname">'+esc(s.name)+
+               '</span><span class="fcount">'+s.count+(s.count===1?' archivo':' archivos')+'</span>'+
+               (s.isNew?'<span class="badge">Nuevo</span>':'')+'</a>';
+      }).join("") + '</div>';
+    }
+
+    if(texts.length){
+      html += '<h2 class="section">Textos</h2><div id="texts"></div>';
+    }
+    if(imgs.length){
+      html += '<h2 class="section">Imágenes</h2><div class="grid">' + imgs.map(function(f){
+        var u = rawUrl(m.sha, f.path);
+        return '<figure><a href="'+u+'" target="_blank" rel="noopener"><img loading="lazy" src="'+u+'" alt="'+esc(f.path)+'"></a>'+
+               '<figcaption><span>'+esc(f.path.split("/").pop())+'</span>'+(f.isNew?'<span class="badge">Nuevo</span>':'')+'</figcaption></figure>';
+      }).join("") + '</div>';
+    }
+    if(other.length){
+      html += '<h2 class="section">Otros archivos</h2><ul class="files">' + other.map(function(f){
+        var href = /\.html?$/i.test(f.path) ? encodeURI(f.path) : rawUrl(m.sha, f.path);
+        return '<li><a class="link" href="'+href+'" target="_blank" rel="noopener">'+esc(f.path.split("/").pop())+'</a>'+(f.isNew?'<span class="badge">Nuevo</span>':'')+'</li>';
+      }).join("") + '</ul>';
+    }
+    if(!subList.length && !texts.length && !imgs.length && !other.length)
+      html += '<div class="msg">No hay contenidos para mostrar aquí con este filtro.</div>';
+    box.innerHTML = html;
+
+    // Commits
+    $("activityTitle").hidden = false;
+    $("commits").innerHTML = m.commits.map(function(c){
+      var msg = (c.commit.message||"").split("\n")[0];
+      return '<li><span>'+esc(msg)+'</span><time datetime="'+c.commit.author.date+'">'+ago(c.commit.author.date)+'</time></li>';
+    }).join("");
+
+    // Textos: se descargan desde raw.githubusercontent.com (no gasta cuota de la API)
+    var holder = $("texts");
+    if(holder){
+      var cards = await Promise.all(texts.map(async function(f, i){
+        var d = document.createElement("details");
+        d.className = "card"; d.open = i < 3;
+        var name = f.path.split("/").pop();
+        d.innerHTML = '<summary><span class="name">'+esc(name)+
+          (f.path.indexOf("/")>-1 ? ' <span class="path">'+esc(f.path.replace(name,""))+'</span>' : '')+
+          '</span>'+(f.isNew?'<span class="badge">Nuevo</span>':'')+'</summary><div class="body">Cargando…</div>';
+        try{
+          var r = await fetch(rawUrl(m.sha, f.path));
+          var t = await r.text();
+          var b = d.querySelector(".body");
+          if(/\.txt$/i.test(f.path)){ b.innerHTML = "<pre style=\"white-space:pre-wrap\">"+esc(t)+"</pre>"; }
+          else{
+            b.innerHTML = DOMPurify.sanitize(marked.parse(t));
+            var base = f.path.indexOf("/")>-1 ? f.path.slice(0, f.path.lastIndexOf("/")+1) : "";
+            b.querySelectorAll("img").forEach(function(im){
+              var s = im.getAttribute("src")||"";
+              if(!/^(https?:|data:|\/\/)/i.test(s)) im.src = rawUrl(m.sha, s.charAt(0)==="/" ? s.slice(1) : base+s);
+            });
+            b.querySelectorAll("a").forEach(function(a){ a.target="_blank"; a.rel="noopener"; });
+          }
+        }catch(e){ d.querySelector(".body").textContent = "No se pudo cargar este archivo."; }
+        return d;
+      }));
+      cards.forEach(function(c){ holder.appendChild(c); });
+    }
+  }
+
+  $("filters").addEventListener("click", function(e){
+    var b = e.target.closest("button"); if(!b) return;
+    filter = b.dataset.f;
+    document.querySelectorAll("#filters button").forEach(function(x){ x.setAttribute("aria-pressed", String(x===b)); });
+    if(model) render();
+  });
+
+  window.addEventListener("hashchange", function(){ if(model){ render(); window.scrollTo(0,0); } });
+
+  load();
+  setInterval(load, POLL_MS);
+  document.addEventListener("visibilitychange", function(){ if(!document.hidden) load(); });
+})();
+</script>
+</body>
+</html>
