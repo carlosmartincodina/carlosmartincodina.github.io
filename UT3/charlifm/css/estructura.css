@@ -1,0 +1,63 @@
+/* Estructura general: Grid y Flexbox */
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  min-height: 100vh;
+  display: grid;
+  grid-template-columns: 1fr;
+  grid-template-rows: auto 1fr auto;
+  grid-template-areas:
+    "cabecera"
+    "principal"
+    "pie";
+}
+
+.cabecera {
+  grid-area: cabecera;
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  gap: 48px;
+  padding: 16px 32px;
+}
+
+.cabecera nav {
+  display: flex;
+  gap: 32px;
+}
+
+main {
+  grid-area: principal;
+  padding: 48px 32px;
+}
+
+footer {
+  grid-area: pie;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-start;
+  align-items: center;
+  gap: 48px;
+  padding: 24px 32px;
+}
+
+.recomendadas {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 200px));
+  gap: 32px;
+}
+
+.recomendadas h2 {
+  grid-column: 1 / -1;
+}
+
+.contenido {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 32px;
+  margin-top: 24px;
+}
