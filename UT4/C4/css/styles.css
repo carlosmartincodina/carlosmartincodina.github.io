@@ -1,0 +1,38 @@
+.oscuro {
+    background-color: black;
+    color: white;
+}
+
+#texto:hover {
+    color: red;
+}
+/* C3 */
+.btn-hamburguesa {
+    display: none;
+}
+
+.menu {
+    display: flex;
+    gap: 20px;
+}
+
+@media (max-width: 768px) {
+    .btn-hamburguesa {
+        display: block;
+    }
+    .menu {
+        display: none;      
+        flex-direction: column;
+    }
+    .menu.abierto {
+        display: flex;
+    }
+}
+/* C4 */
+.faq summary {
+    cursor: pointer
+}
+
+.faq summary:hover {
+    color: blue
+}
