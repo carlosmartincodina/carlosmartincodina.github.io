@@ -1,0 +1,8 @@
+.oscuro {
+    background-color: black;
+    color: white;
+}
+
+#texto:hover {
+    color: red;
+}
