@@ -79,6 +79,13 @@
   .grid img{display:block;width:100%;height:160px;object-fit:cover}
   .grid figcaption{padding:8px 12px;font:.8rem/1.3 system-ui,sans-serif;color:var(--muted);
     display:flex;justify-content:space-between;gap:6px;word-break:break-all}
+  .exercise{display:flex;flex-direction:column;background:var(--card);border:1px solid var(--line);
+    border-radius:12px;overflow:hidden}
+  .exercise:hover{border-color:var(--accent)}
+  .exercise .folder{flex:1;border:0;border-radius:0}
+  .exercise .more{border-top:1px solid var(--line);padding:6px 14px;color:var(--muted);
+    font:.8rem system-ui,sans-serif;text-decoration:none}
+  .exercise .more:hover{color:var(--accent)}
   .files{list-style:none;margin:0;padding:0;font-family:system-ui,sans-serif;font-size:.92rem}
   .files li{background:var(--card);border:1px solid var(--line);border-radius:10px;
     padding:10px 14px;margin-bottom:8px;display:flex;justify-content:space-between;gap:8px}
@@ -132,7 +139,7 @@
   // ===========================
 
   var API = "https://api.github.com/repos/" + OWNER + "/" + REPO;
-  var TEXT = /\.(md|markdown|txt)$/i, IMG = /\.(png|jpe?g|gif|webp|svg|avif)$/i;
+  var TEXT = /\.(md|markdown|txt)$/i, IMG = /\.(png|jpe?g|gif|webp|svg|avif)$/i, HTML = /\.html?$/i;
   var etag = null, currentSha = null, filter = "all", model = null;
   var $ = function(id){ return document.getElementById(id); };
 
@@ -145,6 +152,16 @@
   function esc(s){ return String(s).replace(/[&<>"']/g,function(c){return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c];}); }
   function rawUrl(sha, path){ return "https://raw.githubusercontent.com/"+OWNER+"/"+REPO+"/"+sha+"/"+encodeURI(path); }
   function blobUrl(sha, path){ return "https://github.com/"+OWNER+"/"+REPO+"/blob/"+sha+"/"+encodeURI(path); }
+  // Dirección de la página publicada (GitHub Pages sirve la web desde este mismo repositorio)
+  function pageUrl(path){ return path.split("/").map(encodeURIComponent).join("/"); }
+  // Página de un ejercicio: el index.html de la carpeta o, si no hay, su único archivo HTML
+  function mainPage(files, dir){
+    var pages = files.filter(function(f){
+      return f.path.indexOf(dir+"/")===0 && f.path.indexOf("/", dir.length+1)===-1 && HTML.test(f.path);
+    });
+    var index = pages.filter(function(f){ return /\/index\.html?$/i.test(f.path); })[0];
+    return index ? index.path : pages.length===1 ? pages[0].path : null;
+  }
   function dlBtn(path){ return '<button type="button" class="dl" data-dl="'+esc(path)+'">⬇ Descargar</button>'; }
   function actionsHtml(path){
     return '<div class="actions"><a class="btn" href="'+blobUrl(model.sha, path)+'" target="_blank" rel="noopener">Ver en GitHub</a>'+dlBtn(path)+'</div>';
@@ -229,7 +246,7 @@
         s.count++; if(f.isNew) s.isNew = true;
       }
     });
-    var subList = Object.keys(subs).sort(function(a,b){ return a.localeCompare(b); }).map(function(k){ return subs[k]; });
+    var subList = Object.keys(subs).sort(function(a,b){ return a.localeCompare(b, "es", {numeric:true}); }).map(function(k){ return subs[k]; });
 
     var here = inCur.filter(function(f){ return dirOf(f.path) === cur; });
     var texts = here.filter(function(f){return kind(f.path)==="text" && show(f);})
@@ -252,9 +269,13 @@
     if(subList.length){
       html += '<h2 class="section">Carpetas</h2><div class="folders">' + subList.map(function(s){
         var target = "#/" + encodeURI(prefix + s.name);
-        return '<a class="folder" href="'+target+'"><span class="ico">📁</span><span class="fname">'+esc(s.name)+
-               '</span><span class="fcount">'+s.count+(s.count===1?' archivo':' archivos')+'</span>'+
+        var page = mainPage(m.files, prefix + s.name);
+        var card = '<a class="folder" href="'+(page ? pageUrl(page) : target)+'"'+
+               (page ? ' target="_blank" rel="noopener"' : '')+'><span class="ico">'+(page?'🌐':'📁')+'</span><span class="fname">'+esc(s.name)+
+               '</span><span class="fcount">'+(page ? 'Abrir página ↗' : s.count+(s.count===1?' archivo':' archivos'))+'</span>'+
                (s.isNew?'<span class="badge">Nuevo</span>':'')+'</a>';
+        if(!page) return card;
+        return '<div class="exercise">'+card+'<a class="more" href="'+target+'">Ver archivos ('+s.count+')</a></div>';
       }).join("") + '</div>';
     }
 
@@ -271,7 +292,8 @@
     }
     if(other.length){
       html += '<h2 class="section">Otros archivos</h2><ul class="files">' + other.map(function(f){
-        return '<li><a class="link" href="'+blobUrl(m.sha, f.path)+'" target="_blank" rel="noopener">'+esc(f.path.split("/").pop())+'</a>'+
+        var href = HTML.test(f.path) ? pageUrl(f.path) : blobUrl(m.sha, f.path);
+        return '<li><a class="link" href="'+href+'" target="_blank" rel="noopener">'+esc(f.path.split("/").pop())+'</a>'+
                '<span class="row">'+(f.isNew?'<span class="badge">Nuevo</span>':'')+dlBtn(f.path)+'</span></li>';
       }).join("") + '</ul>';
     }
