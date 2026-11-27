@@ -1,0 +1,30 @@
+.oscuro {
+    background-color: black;
+    color: white;
+}
+
+#texto:hover {
+    color: red;
+}
+
+.btn-hamburguesa {
+    display: none;
+}
+
+.menu {
+    display: flex;
+    gap: 20px;
+}
+
+@media (max-width: 768px) {
+    .btn-hamburguesa {
+        display: block;
+    }
+    .menu {
+        display: none;      
+        flex-direction: column;
+    }
+    .menu.abierto {
+        display: flex;
+    }
+}
