@@ -1,4 +1,4 @@
-**idaCréditos de imágenes y audio**  
+**Créditos de imágenes y audio**  
 - img/radio1-\*.jpg: foto de Joe Wilkinson, Pexels (licencia Pexels, uso libre). Redimensionada, recortada y comprimida.  
 - img/radio2-\*.jpg: foto de Martin Chapman, Pexels (licencia Pexels, uso libre). Redimensionada, recortada y comprimida.  
 - img/radio3-\*.jpg: foto de Muserref I Kizoglu, Pexels (licencia Pexels, uso libre). Redimensionada, recortada y comprimida.  
